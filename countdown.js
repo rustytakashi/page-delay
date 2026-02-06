@@ -1,6 +1,7 @@
-// Get the target URL from the query parameter
+// Get parameters from the URL
 const params = new URLSearchParams(window.location.search);
 const targetUrl = params.get('url');
+const delay = parseInt(params.get('delay')) || 5;
 
 const countdownEl = document.getElementById('countdown');
 const urlEl = document.getElementById('url');
@@ -8,7 +9,7 @@ const urlEl = document.getElementById('url');
 if (targetUrl) {
   urlEl.textContent = targetUrl;
 
-  let seconds = 5;
+  let seconds = delay;
   countdownEl.textContent = seconds;
 
   const interval = setInterval(() => {
@@ -17,10 +18,9 @@ if (targetUrl) {
 
     if (seconds <= 0) {
       clearInterval(interval);
-      // Tell background script to allow this URL, then redirect
-      browser.runtime.sendMessage({ type: 'allowUrl', url: targetUrl }).then(() => {
-        window.location.href = targetUrl;
-      });
+      countdownEl.textContent = '...';
+      // Tell background script to allow and redirect
+      browser.runtime.sendMessage({ type: 'allowUrl', url: targetUrl });
     }
   }, 1000);
 } else {

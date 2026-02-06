@@ -1,0 +1,10 @@
+# Build artifacts
+*.zip
+
+# macOS
+.DS_Store
+
+# Editor
+*.swp
+*.swo
+*~

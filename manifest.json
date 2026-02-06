@@ -2,11 +2,19 @@
   "manifest_version": 2,
   "name": "Page Load Delay",
   "version": "1.0",
-  "description": "Delays loading webpages by 5 seconds",
+  "description": "Add customizable delays before loading specified websites",
+
+  "icons": {
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png",
+    "128": "icons/icon-128.png"
+  },
 
   "permissions": [
     "webRequest",
     "webRequestBlocking",
+    "storage",
+    "tabs",
     "<all_urls>"
   ],
 
@@ -15,7 +23,16 @@
   },
 
   "browser_action": {
+    "default_icon": {
+      "48": "icons/icon-48.png",
+      "96": "icons/icon-96.png"
+    },
     "default_title": "Page Load Delay"
+  },
+
+  "options_ui": {
+    "page": "settings.html",
+    "open_in_tab": true
   },
 
   "web_accessible_resources": [
