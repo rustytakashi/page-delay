@@ -2,6 +2,13 @@
  * @typedef {Object} DomainGroup
  * @property {number} delay - Delay in seconds for this group
  * @property {string[]} domains - List of domains in this group
+ * @property {boolean} [requireFocus] - If true, countdown only runs when page is focused
+ */
+
+/**
+ * @typedef {Object} MatchResult
+ * @property {number} delay - Delay in seconds
+ * @property {boolean} requireFocus - Whether to require focus for countdown
  */
 
 /**
@@ -64,11 +71,11 @@ browser.storage.onChanged.addListener((changes) => {
 });
 
 /**
- * Get the delay for a URL if it matches any configured domain group.
+ * Get the delay settings for a URL if it matches any configured domain group.
  * @param {string} url - The URL to check
- * @returns {number|null} The delay in seconds, or null if URL should not be delayed
+ * @returns {MatchResult|null} The match result, or null if URL should not be delayed
  */
-function getDelayForUrl(url) {
+function getMatchForUrl(url) {
   // If settings haven't loaded yet, don't delay
   if (!settingsLoaded) {
     return null;
@@ -94,7 +101,10 @@ function getDelayForUrl(url) {
       });
 
       if (matches) {
-        return group.delay || 5;
+        return {
+          delay: group.delay || 5,
+          requireFocus: group.requireFocus || false
+        };
       }
     }
 
@@ -152,16 +162,17 @@ browser.webRequest.onBeforeRequest.addListener(
         return { cancel: false };
       }
 
-      // Check if this URL matches any domain group and get its delay
-      const delay = getDelayForUrl(url);
-      if (delay === null) {
+      // Check if this URL matches any domain group and get its settings
+      const match = getMatchForUrl(url);
+      if (match === null) {
         return { cancel: false };
       }
 
-      // Redirect to countdown page with delay parameter
+      // Redirect to countdown page with delay and focus parameters
       const redirectUrl = countdownPage +
         '?url=' + encodeURIComponent(url) +
-        '&delay=' + delay;
+        '&delay=' + match.delay +
+        '&requireFocus=' + (match.requireFocus ? '1' : '0');
       return { redirectUrl: redirectUrl };
     }
 

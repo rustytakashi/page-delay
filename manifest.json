@@ -1,8 +1,17 @@
 {
   "manifest_version": 2,
   "name": "Page Load Delay",
-  "version": "1.0",
-  "description": "Add customizable delays before loading specified websites",
+  "version": "0.0.1",
+  "description": "Add friction to distracting websites with customizable countdown delays. Create groups of domains with different wait times to reduce impulsive browsing.",
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{42a40283-85d0-4020-8499-17a095a37194}",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  },
 
   "icons": {
     "48": "icons/icon-48.png",
@@ -14,7 +23,6 @@
     "webRequest",
     "webRequestBlocking",
     "storage",
-    "tabs",
     "<all_urls>"
   ],
 
